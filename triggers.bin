@@ -1,0 +1,14 @@
+Crash!!!
+Missing **FALLBACK** translation!
+Tried to get translation from nonexistent file
+WARNING: Shader Unsupported
+The referenced script on this Behaviour
+Private beta: True
+Public beta: True
+Private beta: true
+Public beta: true
+Release candidate: True
+Release candidate: true
+========== OUTPUTTING STACK TRACE ==================
+A crash has been intercepted by the crash handler. For call stack and other details, see the latest crash report generated in:
+Authentication error (authenticate - response): [Auth Error] 1B3/

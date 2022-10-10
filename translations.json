@@ -1,0 +1,16 @@
+{
+    "Crash!!!": "<!> WARNING <!> | The Game Detected a Crash! Ask the user for their crash.dmp's and crash logs",
+    "Missing **FALLBACK** translation!": "Note | Some translations are missing",
+    "Tried to get translation from nonexistent file": "Note | Some translations are missing",
+    "WARNING: Shader Unsupported": "(i) Caution (i) | User's GPU may be below minimum requirements",
+    "The referenced script on this Behaviour": "Note | Some game files are missing. Try a Clean Reinstall",
+    "Private beta: True": "(i) Caution (i) | User is on a PRIVATE BETA",
+    "Private beta: true": "(i) Caution (i) | User is on a PRIVATE BETA",
+    "Public beta: True": "(i) Caution (i) | User is on a PUBLIC BETA",
+    "Public beta: true": "(i) Caution (i) | User is on a PUBLIC BETA",
+    "Release candidate: True": "(i) Caution (i) | User is on a RELEASE CANDIDATE",
+    "Release candidate: true": "(i) Caution (i) | User is on a RELEASE CANDIDATE",
+    "========== OUTPUTTING STACK TRACE ==================": "<!> WARNING <!> | The Game Detected a Crash! Ask the user for their crash.dmp's and crash logs",
+    "A crash has been intercepted by the crash handler. For call stack and other details, see the latest crash report generated in:": "<!> WARNING <!> | The Game Detected a Crash! Ask the user for their crash.dmp's and crash logs",
+    "Authentication error (authenticate - response): [Auth Error] 1B3/": "<!> WARNING <!> | Invalid Response Sent from Centerals. [ERROR 1B3/...]"
+}
