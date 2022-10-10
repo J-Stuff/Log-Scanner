@@ -5,6 +5,17 @@ import os
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 
+class logCol:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 def dedupe(mylist):
     mylist = list(dict.fromkeys(mylist))
     return mylist
@@ -52,7 +63,12 @@ def checkLog(log):
             fp.close()
         for error in badLines:
             try:
-                print(translations[str(error)])
+                message = (translations[str(error)])
+                if message.startswith("(!) WARNING (!)"):
+                    message = logCol.FAIL + message + logCol.ENDC
+                elif message.startswith("(i) Caution (i)"):
+                    message = logCol.WARNING + message + logCol.ENDC
+                print(message)
             except:
                 print(f"Translation Error, Missing translation for {error}")
     else:
@@ -89,4 +105,4 @@ def getLog():
 if __name__ in "__main__":
     getLog()
 
-# Buffer                                           
+# B
