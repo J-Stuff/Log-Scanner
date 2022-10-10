@@ -5,7 +5,16 @@ import os
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 
+def dedupe(mylist):
+    mylist = list(dict.fromkeys(mylist))
+    return mylist
 
+def cleanup():
+    os.system('cls')
+    print("Cleaning up...")
+    os.remove(f"{cwd}\\LogStore\\Player.log")
+    time.sleep(1)
+    os.system('cls')              
 
 def checkFile(input):
     for line in input:
@@ -20,27 +29,6 @@ def checkFile(input):
     print("If you know you provided a valid player.log file, Please file a bug report with the developer!")
     time.sleep(10)
     sys.exit("Didn't provide a valid Player.log file!")
-
-def dedupe(mylist):
-    mylist = list(dict.fromkeys(mylist))
-    return mylist
-
-def downloadLog():
-    if not os.path.exists(f"{cwd}\\LogStore"):
-        os.mkdir(f"{cwd}\\LogStore")
-        print("Created LogStore Directory (First Time Setup)")
-    print("Drag and drop the Player.log download link below")
-    text = "Ctrl + Click me if you don't know how to do that"
-    target = "https://cdn.discordapp.com/attachments/1019358536733569054/1028261000207683644/Untitled_video_-_Made_with_Clipchamp_2.gif"
-    print(f"\u001b]8;;{target}\u001b\\{text}\u001b]8;;\u001b\\")
-    os.system(f"curl.exe -o \"{cwd}\\LogStore\\Player.log\" {input('Enter the URL of the Player.log: ')}")
-
-def cleanup():
-    os.system('cls')
-    print("Cleaning up...")
-    os.remove(f"{cwd}\\LogStore\\Player.log")
-    time.sleep(1)
-    os.system('cls')              
 
 def checkLog(log):
     checkFile(log)
@@ -73,6 +61,16 @@ def checkLog(log):
     print(f"With {str(len(badLines))} result(s) found.")
     input("PRESS ENTER TO CONTINUE   ")
     cleanup()
+
+def downloadLog():
+    if not os.path.exists(f"{cwd}\\LogStore"):
+        os.mkdir(f"{cwd}\\LogStore")
+        print("Created LogStore Directory (First Time Setup)")
+    print("Drag and drop the Player.log download link below")
+    text = "Ctrl + Click me if you don't know how to do that"
+    target = "https://cdn.discordapp.com/attachments/1019358536733569054/1028261000207683644/Untitled_video_-_Made_with_Clipchamp_2.gif"
+    print(f"\u001b]8;;{target}\u001b\\{text}\u001b]8;;\u001b\\")
+    os.system(f"curl.exe -o \"{cwd}\\LogStore\\Player.log\" {input('Enter the URL of the Player.log: ')}")
 
 def getLog():
     downloadLog()
