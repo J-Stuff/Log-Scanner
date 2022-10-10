@@ -26,6 +26,9 @@ def dedupe(mylist):
     return mylist
 
 def downloadLog():
+    if not os.path.exists(f"{cwd}\\LogStore"):
+        os.mkdir(f"{cwd}\\LogStore")
+        print("Created LogStore Directory (First Time Setup)")
     print("Drag and drop the Player.log download link below")
     text = "Ctrl + Click me if you don't know how to do that"
     target = "https://cdn.discordapp.com/attachments/1019358536733569054/1028261000207683644/Untitled_video_-_Made_with_Clipchamp_2.gif"
