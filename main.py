@@ -65,7 +65,7 @@ def checkLog(log):
             try:
                 message = (translations[str(error)])
                 if message.startswith("(!) WARNING (!)"):
-                    message = logCol.FAIL + message + logCol.ENDC
+                    message = logCol.FAIL + logCol.BOLD + message + logCol.ENDC
                 elif message.startswith("(i) Caution (i)"):
                     message = logCol.WARNING + message + logCol.ENDC
                 print(message)
