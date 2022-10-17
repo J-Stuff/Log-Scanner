@@ -6,7 +6,7 @@ import sys
 import time
 
 cwd = os.path.dirname(os.path.realpath(__file__))
-
+update = True
 class logCol:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -19,11 +19,30 @@ class logCol:
     UNDERLINE = '\033[4m'
 
 def checkForUpdates():
+    print("Checking for updates, Please wait...")
+    if not update:
+        return
     with open('.\\resources\\dataStore.json', 'r') as fp:
         settingsJson = json.loads(fp.read())
+    with open('.\\resources\\currentVersion.txt', 'r') as fp:
+        scriptVersion = fp.read()
+    minUrl = "https://raw.githubusercontent.com/J-Stuff/Log-Scanner/master/resources/minVersion.txt"
+    os.system(f"curl.exe -s -o \".\\resources\\minVersion.txt\" {minUrl}")
+    with open('.\\resources\\minVersion.txt', 'r') as fp:
+        minVer = fp.read()
+    if minVer > scriptVersion:
+        print("(!) OUTDATED (!)")
+        print("This script is outdated!")
+        print("A new major release has been pushed, and the auto-update cannot upgrade this version")
+        print("Please download the latest version of the script at:")
+        print("https://github.com/J-Stuff/Log-Scanner/releases")
+        time.sleep(100)
+        print("CLOSING")
+        sys.exit("Outdated script!")
+
     unixNow = int(time.time()) 
     if int(unixNow) - int(settingsJson["lastUpdated"]) >= 172800:
-        print("Checking for updates, Please wait...")
+        print("Checking Github for Updates...")
         
 
         translationsUrl = "https://raw.githubusercontent.com/J-Stuff/Log-Scanner/master/translations.json"
@@ -48,6 +67,10 @@ def checkForUpdates():
         with open('.\\resources\\dataStore.json', 'w') as fp:
             fp.write(json.dumps(settingsJson))
         time.sleep(3)
+        try:
+            shutil.rmtree(f'{cwd}\\temp')
+        except:
+            print("Cleanup")
         os.system('cls')
 
 
@@ -77,7 +100,7 @@ def checkFile(input):
     sys.exit("Didn't provide a valid Player.log file!")
 
 def checkLog(log):
-    # checkFile(log)
+    checkFile(log)
     badLines = []
     with open(f"{cwd}\\triggers.bin", 'r') as triggerFile:
         triggers = triggerFile.read().splitlines()
