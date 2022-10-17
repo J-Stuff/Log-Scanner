@@ -1,7 +1,9 @@
+import filecmp
 import json
+import os
+import shutil
 import sys
 import time
-import os
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 
@@ -15,6 +17,39 @@ class logCol:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+def checkForUpdates():
+    with open('.\\resources\\dataStore.json', 'r') as fp:
+        settingsJson = json.loads(fp.read())
+    unixNow = int(time.time()) 
+    if int(unixNow) - int(settingsJson["lastUpdated"]) >= 172800:
+        print("Checking for updates, Please wait...")
+        
+
+        translationsUrl = "https://raw.githubusercontent.com/J-Stuff/Log-Scanner/master/translations.json"
+        triggersUrl = "https://raw.githubusercontent.com/J-Stuff/Log-Scanner/master/triggers.bin"
+        os.mkdir("./temp")
+        os.system(f"curl.exe -s -o \"{cwd}\\temp\\translationsGithub.tmp\" {translationsUrl}")
+        os.system(f"curl.exe -s -o \"{cwd}\\temp\\triggersGithub.tmp\" {triggersUrl}")
+        translationsMatch = filecmp.cmp(f"{cwd}\\temp\\translationsGithub.tmp", "./translations.json")
+        print(translationsMatch)
+        triggersMatch = filecmp.cmp(f"{cwd}\\temp\\triggersGithub.tmp", "./triggers.bin")
+        print(triggersMatch)
+        if not translationsMatch:
+            print("Updating translations...")
+            os.system(f"curl.exe -s -o \"{cwd}\\translations.json\" {translationsUrl}")
+        if not translationsMatch:
+            print("Updating triggers...")
+            os.system(f"curl.exe -s -o \"{cwd}\\triggers.bin\" {triggersUrl}")
+        time.sleep(5)
+        print("Update complete!")
+        shutil.rmtree(f'{cwd}\\temp')
+        settingsJson["lastUpdated"] = int(unixNow)
+        with open('.\\resources\\dataStore.json', 'w') as fp:
+            fp.write(json.dumps(settingsJson))
+        time.sleep(3)
+        os.system('cls')
+
 
 def dedupe(mylist):
     mylist = list(dict.fromkeys(mylist))
@@ -42,7 +77,7 @@ def checkFile(input):
     sys.exit("Didn't provide a valid Player.log file!")
 
 def checkLog(log):
-    checkFile(log)
+    # checkFile(log)
     badLines = []
     with open(f"{cwd}\\triggers.bin", 'r') as triggerFile:
         triggers = triggerFile.read().splitlines()
@@ -89,6 +124,7 @@ def downloadLog():
     os.system(f"curl.exe -o \"{cwd}\\LogStore\\Player.log\" {input('Enter the URL of the Player.log: ')}")
 
 def getLog():
+    checkForUpdates()
     downloadLog()
     if os.path.exists(f"{cwd}\\LogStore\\Player.log"):
         print("Found log!")
@@ -105,4 +141,4 @@ def getLog():
 if __name__ in "__main__":
     getLog()
 
-# B
+# BUFFER
