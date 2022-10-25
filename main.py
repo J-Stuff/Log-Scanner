@@ -7,6 +7,11 @@ import time
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 update = True
+
+with open('./resources/dataStore.json', 'r') as fp:
+    settingsJson = json.loads(fp.read())
+    fp.close()
+
 class logCol:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -17,6 +22,29 @@ class logCol:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+    
+def anylitics():
+    if settingsJson["runSetup"]:
+        print("Running first time setup module: Anylitics")
+        print("!!! Please Read !!!")
+        print("This script can utilize a module that allows it to send anonymous data about what errors it finds in the player logs.")
+        print("All data sent is completely anonymous (it does NOT include IP Addresses, any HWID Identifiers, Discord Account information or simmilar) and is encrypted in transit. As well as stored in a secure and encrypted manner.")
+        print("This module is DISABLED by default, If you would like to enable it, type y below. If you would like to keep it disabled, type n below")
+        print("Nothing else in the script will change, nor will any other features/functions of the script be effected by your decision.")
+        decision = input("y/n")
+        if decision == "y" or decision == "Y":
+            settingsJson["runSetup"] = False
+            settingsJson["anylitics"] = True
+            with open('./resources/dataStore.json', 'r') as fp:
+                fp.write(json.dumps(settingsJson))
+        if decision == "y" or decision == "Y":
+            settingsJson["runSetup"] = False
+            settingsJson["anylitics"] = True
+            with open('./resources/dataStore.json', 'r') as fp:
+                fp.write(json.dumps(settingsJson))
+
+
 
 def checkForUpdates():
     print("Checking for updates, Please wait...")
@@ -85,22 +113,7 @@ def cleanup():
     time.sleep(1)
     os.system('cls')              
 
-def checkFile(input):
-    for line in input:
-        x = line.find("Loaded NorthwoodLib")
-        if x != -1:
-            print("File is Valid!")
-            time.sleep(0.3)
-            return
-    os.system('cls')
-    print("This file is not a valid player.log file!")
-    print("Please ensure that you provided a valid player.log URL")
-    print("If you know you provided a valid player.log file, Please file a bug report with the developer!")
-    time.sleep(10)
-    sys.exit("Didn't provide a valid Player.log file!")
-
 def checkLog(log):
-    checkFile(log)
     badLines = []
     with open(f"{cwd}\\triggers.bin", 'r') as triggerFile:
         triggers = triggerFile.read().splitlines()
