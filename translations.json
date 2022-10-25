@@ -24,5 +24,7 @@
     "Failed to connect to api.scpslgame.com port 443: Connection refused": "(!) WARNING (!) | Client failed to make a connection to the API service! (api.scpslgame.com) | Connection refused",
     "Can't update central servers list!": "(!) WARNING (!) | Can't update central servers list!",
     "Changed central server: Primary API (https://api.scpslgame.com/)": "(i) Caution (i) | Changed central server: Primary API (https://api.scpslgame.com/)",
-    "Authentication error (authenticate - response): [Auth Error] 5B/": "(!) WARNING (!) | Invalid Response Sent from Centerals. [ERROR 5B/...]"
+    "Authentication error (authenticate - response): [Auth Error] 5B/": "(!) WARNING (!) | Invalid Response Sent from Centerals. [ERROR 5B/...]",
+    "Authentication error (authenticate - inner web)": "(!) WARNING (!) | Client Failed to Authenticate! (authenticate - inner web) {NOTE: This is caused by Centrals being dumb. Try a clean-reinstall. If that doesn't work, inform a SYS-Admin that Centrals aren't authenticating users!} {NOTE: This can also be caused by a Failed attempt at authenticating via Discord (with the -fdiscord launch arg). But a sys-admin should always be informed if this error EVER prints!}",
+    "CentralAuthManager:Authentication()": "(!) WARNING (!) | Client Failed to Authenticate! (CentralAuthManager:Authentication()) | <!> Central server FAILURE <!> Inform a sys-admin!"
 }
