@@ -5,6 +5,21 @@ import shutil
 import sys
 import time
 
+import requests
+
+
+def optLibraries():
+    try:
+        import requests
+    except:
+        print("Installing required Libraries...")
+        os.system('pip install requests')
+        print("Done!")
+        time.sleep(1)
+        optLibraries()
+
+
+
 cwd = os.path.dirname(os.path.realpath(__file__))
 update = True
 
@@ -24,25 +39,47 @@ class logCol:
     UNDERLINE = '\033[4m'
 
     
-def anylitics():
-    if settingsJson["runSetup"]:
-        print("Running first time setup module: Anylitics")
-        print("!!! Please Read !!!")
-        print("This script can utilize a module that allows it to send anonymous data about what errors it finds in the player logs.")
-        print("All data sent is completely anonymous (it does NOT include IP Addresses, any HWID Identifiers, Discord Account information or simmilar) and is encrypted in transit. As well as stored in a secure and encrypted manner.")
-        print("This module is DISABLED by default, If you would like to enable it, type y below. If you would like to keep it disabled, type n below")
-        print("Nothing else in the script will change, nor will any other features/functions of the script be effected by your decision.")
-        decision = input("y/n")
-        if decision == "y" or decision == "Y":
-            settingsJson["runSetup"] = False
-            settingsJson["anylitics"] = True
-            with open('./resources/dataStore.json', 'r') as fp:
-                fp.write(json.dumps(settingsJson))
-        if decision == "y" or decision == "Y":
-            settingsJson["runSetup"] = False
-            settingsJson["anylitics"] = True
-            with open('./resources/dataStore.json', 'r') as fp:
-                fp.write(json.dumps(settingsJson))
+if settingsJson["runSetup"]:
+    print("Running first time setup module: Anylitics")
+    print("!!! Please Read !!!")
+    print("This script can utilize a module that allows it to send anonymous data about what errors it finds in the player logs.")
+    print("All data sent is completely anonymous (it does NOT include IP Addresses, any HWID Identifiers, Discord Account information or simmilar) and is encrypted in transit. As well as stored in a secure and encrypted manner.")
+    print("This module is DISABLED by default, If you would like to enable it, type y below. If you would like to keep it disabled, type n below")
+    print("Nothing else in the script will change, nor will any other features/functions of the script be effected by your decision.")
+    decision = input("y/n")
+    if decision == "y" or decision == "Y":
+        settingsJson["runSetup"] = False
+        settingsJson["anylitics"] = True
+        with open('./resources/dataStore.json', 'w+') as fp:
+            fp.write(json.dumps(settingsJson))
+    if decision == "n" or decision == "N":
+        settingsJson["runSetup"] = False
+        settingsJson["anylitics"] = False
+        with open('./resources/dataStore.json', 'w+') as fp:
+            fp.write(json.dumps(settingsJson))
+
+def anylitics(errors):
+    if settingsJson["anylitics"]:
+        length = len(errors)
+        payload = {
+            "findCount": length,
+            "findList": errors
+        }
+        url = "https://api.j-stuff.net/analytics/logScanner"
+        payload = json.dumps(payload)
+        print("Sending analytical data...")
+        x = requests.post(url, json=payload)
+        print(x.text)
+        if x.status_code == 200:
+            print("Success!")
+        else:
+            print("Something went wrong while sending the analytical data. Don't worry, the service was probably down temporarilly.")
+        time.sleep(3)
+    else:
+        print("You have opted OUT of sending analytical data.")
+        time.sleep(3)
+
+
 
 
 
@@ -146,6 +183,7 @@ def checkLog(log):
         print("There are no common errors found in this user's log")
     print(f"{str(total)} lines scanned.")
     print(f"With {str(len(badLines))} result(s) found.")
+    anylitics(badLines)
     input("PRESS ENTER TO CONTINUE   ")
     cleanup()
 
