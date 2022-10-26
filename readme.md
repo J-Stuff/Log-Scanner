@@ -1,5 +1,6 @@
 How to use:
-**NEW! You can now run the program with the pre-compiled EXE file, No need to install python!**
+**NEW! You can now run the program with the pre-compiled EXE file, No need to install python!** 
+
 Execute the script by running the  `run.bat` file. Then, copy-paste or drag the link to the player.log file into the cmd window. The script will do it's magic from there.
 
 **UPDATES:**
