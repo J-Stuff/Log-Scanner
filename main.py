@@ -92,7 +92,9 @@ def checkForUpdates():
     with open('.\\resources\\currentVersion.txt', 'r') as fp:
         scriptVersion = fp.read()
     minUrl = "https://raw.githubusercontent.com/J-Stuff/Log-Scanner/master/resources/minVersion.txt"
-    os.system(f"curl.exe -s -o \".\\resources\\minVersion.txt\" {minUrl}")
+    minData = requests.get(minUrl)
+    with open('.\\resources\\minVersion.txt', 'w+') as fp:
+        fp.write(minData.text)
     with open('.\\resources\\minVersion.txt', 'r') as fp:
         minVer = fp.read()
     if minVer > scriptVersion:
@@ -104,38 +106,25 @@ def checkForUpdates():
         time.sleep(100)
         print("CLOSING")
         sys.exit("Outdated script!")
-
     unixNow = int(time.time()) 
-    if int(unixNow) - int(settingsJson["lastUpdated"]) >= 172800:
+    if int(unixNow) - int(settingsJson["lastUpdated"]) >= 86400:
         print("Checking Github for Updates...")
-        
-
         translationsUrl = "https://raw.githubusercontent.com/J-Stuff/Log-Scanner/master/translations.json"
         triggersUrl = "https://raw.githubusercontent.com/J-Stuff/Log-Scanner/master/triggers.bin"
-        os.mkdir("./temp")
-        os.system(f"curl.exe -s -o \"{cwd}\\temp\\translationsGithub.tmp\" {translationsUrl}")
-        os.system(f"curl.exe -s -o \"{cwd}\\temp\\triggersGithub.tmp\" {triggersUrl}")
-        translationsMatch = filecmp.cmp(f"{cwd}\\temp\\translationsGithub.tmp", "./translations.json")
-        print(translationsMatch)
-        triggersMatch = filecmp.cmp(f"{cwd}\\temp\\triggersGithub.tmp", "./triggers.bin")
-        print(triggersMatch)
-        if not translationsMatch:
-            print("Updating translations...")
-            os.system(f"curl.exe -s -o \"{cwd}\\translations.json\" {translationsUrl}")
-        if not translationsMatch:
-            print("Updating triggers...")
-            os.system(f"curl.exe -s -o \"{cwd}\\triggers.bin\" {triggersUrl}")
+        translationsData = requests.get(translationsUrl)
+        triggersData = requests.get(triggersUrl)
+        with open('.\\traslations.json', 'w+') as fp:
+            print("Updating Translations...")
+            fp.write(translationsData.text)
+        with open('.\\triggers.bin', 'w+') as fp:
+            print("Updating Triggers...")
+            fp.write(triggersData.text)
         time.sleep(5)
         print("Update complete!")
-        shutil.rmtree(f'{cwd}\\temp')
         settingsJson["lastUpdated"] = int(unixNow)
-        with open('.\\resources\\dataStore.json', 'w') as fp:
+        with open('./resources\\dataStore.json', 'w') as fp:
             fp.write(json.dumps(settingsJson))
         time.sleep(3)
-        try:
-            shutil.rmtree(f'{cwd}\\temp')
-        except:
-            print("Cleanup")
         os.system('cls')
 
 
@@ -146,13 +135,13 @@ def dedupe(mylist):
 def cleanup():
     os.system('cls')
     print("Cleaning up...")
-    os.remove(f"{cwd}\\LogStore\\Player.log")
+    os.remove("./LogStore\\Player.log")
     time.sleep(1)
     os.system('cls')              
 
 def checkLog(log):
     badLines = []
-    with open(f"{cwd}\\triggers.bin", 'r') as triggerFile:
+    with open("./triggers.bin", 'r') as triggerFile:
         triggers = triggerFile.read().splitlines()
         total = str(len(log))
         for string in log:
@@ -166,7 +155,7 @@ def checkLog(log):
     badLines = dedupe(badLines)
     if len(badLines) > 0:
         print("Errors:")
-        with open(f"{cwd}\\translations.json", 'r') as fp:
+        with open("./translations.json", 'r') as fp:
             translations = json.loads(fp.read())
             fp.close()
         for error in badLines:
@@ -188,22 +177,26 @@ def checkLog(log):
     cleanup()
 
 def downloadLog():
-    if not os.path.exists(f"{cwd}\\LogStore"):
-        os.mkdir(f"{cwd}\\LogStore")
+    if not os.path.exists("./LogStore"):
+        os.mkdir("./LogStore")
         print("Created LogStore Directory (First Time Setup)")
     print("Drag and drop the Player.log download link below")
     text = "Ctrl + Click me if you don't know how to do that"
     target = "https://cdn.discordapp.com/attachments/1019358536733569054/1028261000207683644/Untitled_video_-_Made_with_Clipchamp_2.gif"
     print(f"\u001b]8;;{target}\u001b\\{text}\u001b]8;;\u001b\\")
-    os.system(f"curl.exe -o \"{cwd}\\LogStore\\Player.log\" {input('Enter the URL of the Player.log: ')}")
+    url = input('Enter the URL of the Player.log: ')
+    logData = requests.get(url, allow_redirects=True)
+    with open(".\\LogStore\\Player.log", 'wb') as fp:
+        fp.write(logData.content)
+
 
 def getLog():
     checkForUpdates()
     downloadLog()
-    if os.path.exists(f"{cwd}\\LogStore\\Player.log"):
+    if os.path.exists("./LogStore\\Player.log"):
         print("Found log!")
         print("Reading...")
-        with open(f"{cwd}\\LogStore\\Player.log", 'r') as fp:
+        with open("./LogStore\\Player.log", 'r') as fp:
             logContents = fp.read().splitlines()
             fp.close()
             checkLog(logContents)

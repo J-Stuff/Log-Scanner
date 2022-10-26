@@ -1,0 +1,1 @@
+python3 -m PyInstaller --onefile --icon icon.ico main.py
